@@ -38,3 +38,18 @@ def get_usd_sgs(start_date: str = START_DATE, end_date: str = END_DATE) -> pd.Da
     df['data'] = pd.to_datetime(df['data'], format='%d/%m/%Y')
     df.rename(columns={'data': 'DATA', 'valor': 'USD_VALOR'}, inplace=True)
     return df
+
+def inspect_data(df):
+    """
+    Realiza uma inspeção básica do dataset, exibindo shape, colunas, tipos de dados, valores nulos, primeiros registros e estatísticas descritivas.
+    Argumentos: df (pd.DataFrame): DataFrame a ser inspecionado.
+    Retorna:    pd.DataFrame: Estatísticas descritivas do DataFrame.
+    """
+    print ("\n=== INSPEÇÃO DO DATASET ===")
+    print (f"Shape: {df.shape}")
+    print (f"\nColunas: {list(df.columns)}")
+    print (f"\nTipos de dados:\n{df.dtypes}")
+    print (f"\nValores nulos por coluna:\n{df.isnull().sum()}")
+    print (f"\nPrimeiros registros:\n{df.head()}")
+    print (f"\nEstatísticas descritivas:\n{df.describe()}")
+    return df.describe(include= "all" )
