@@ -31,7 +31,7 @@ def get_selic_sgs(start_date: str = START_DATE, end_date: str = END_DATE) -> pd.
     df.rename(columns={'data': 'DATA', 'valor': 'SELIC'}, inplace=True)
     return df
 
-def get_dollar_sgs(start_date: str = START_DATE, end_date: str = END_DATE) -> pd.DataFrame:
+def get_usd_sgs(start_date: str = START_DATE, end_date: str = END_DATE) -> pd.DataFrame:
     """Busca a série histórica do Dólar Comercial (SGS 1) na API do Banco Central."""
     url = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados?formato=json&dataInicial={start_date}&dataFinal={end_date}"
     df = _read_json_url(url)
