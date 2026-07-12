@@ -1,3 +1,5 @@
+import pandas as pd
+
 """
 Limpeza, engenharia de atributos e preparação para modelagem (Fases 2, 3 e 4 do notebook).
 """
@@ -46,4 +48,44 @@ def treat_outliers_iqr(df, columns, factor=1.5, method="remove"):
             df.loc[df[column] < lower_bound, column] = lower_bound
             df.loc[df[column] > upper_bound, column] = upper_bound
             
+    return df
+
+def add_duration_column(df: pd.DataFrame, date: str = 'DATA', maturity_date: str = 'VENCIMENTO') -> pd.DataFrame:
+    """
+    Adiciona uma nova coluna 'DURACAO' que representa a duração em dias entre a data do leilão e a data de vencimento do título.
+    Argumentos: df (pd.DataFrame): DataFrame contendo as colunas de datas.
+                date (str): Nome da coluna com a data do leilão.
+                maturity_date (str): Nome da coluna com a data de vencimento.
+    Retorna:    pd.DataFrame: DataFrame com a nova coluna 'DURACAO'.
+    """
+    df = df.copy()
+    df['DURACAO'] = (df[maturity_date] - df[date]).dt.days
+    return df
+
+def add_market_rejection_column(df: pd.DataFrame, accepted_column: str = 'ACEITO/OFERTADO', threshold: float = 0.15) -> pd.DataFrame:
+    """
+    Adiciona uma nova coluna booleana (mas com tipo int, para ser usada em modelos de machine learning) 'REJEICAO_MERCADO' que indica se o leilão sofreu forte rejeição/frustração por parte dos dealers do mercado.
+    Argumentos: df (pd.DataFrame): DataFrame contendo a coluna de proporção aceito/ofertado.
+                accepted_column (str): Nome da coluna com a razão aceito/ofertado.
+                threshold (float): Limiar abaixo do qual o leilão é considerado rejeitado (padrão: 15%).
+    Retorna:    pd.DataFrame: DataFrame modificado com a nova coluna 'REJEICAO_MERCADO'.
+    """
+    df = df.copy()
+    df['REJEICAO_MERCADO'] = (df[accepted_column] < threshold).astype(int)
+    return df
+
+def add_lag_column(df: pd.DataFrame, date: str = 'DATA', target_column: str = 'TAXA') -> pd.DataFrame:
+    """
+    Ordena o dataset cronologicamente por título e adiciona a feature de lag 
+    (taxa do leilão anterior daquele vencimento específico).
+    Remove as linhas iniciais de cada título que conterão valores nulos (NaN).
+    Argumentos: df (pd.DataFrame): DataFrame original.
+                date (str): Nome da coluna de data do leilão.
+                target_column (str): Nome da variável alvo (target) para calcular o lag.
+    Retorna:    pd.DataFrame: DataFrame ordenado, com a nova coluna e sem valores nulos no lag.
+    """
+    df = df.copy()
+    df = df.sort_values(by=['VENCIMENTO', date]).reset_index(drop=True)
+    df['TAXA_ULTIMO_LEILAO'] = df.groupby('VENCIMENTO')[target_column].shift(1)
+    df = df.dropna(subset=['TAXA_ULTIMO_LEILAO']).reset_index(drop=True)
     return df
