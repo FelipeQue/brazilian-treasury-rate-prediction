@@ -50,7 +50,7 @@ def treat_outliers_iqr(df, columns, factor=1.5, method="remove"):
             
     return df
 
-def add_duration_column(df, date='DATA', maturity_date='VENCIMENTO'):
+def add_duration_column(df: pd.DataFrame, date: str = 'DATA', maturity_date: str = 'VENCIMENTO') -> pd.DataFrame:
     """
     Adiciona uma nova coluna 'DURACAO' que representa a duração em dias entre a data do leilão e a data de vencimento do título.
     Argumentos: df (pd.DataFrame): DataFrame contendo as colunas de datas.
@@ -62,3 +62,14 @@ def add_duration_column(df, date='DATA', maturity_date='VENCIMENTO'):
     df['DURACAO'] = (df[maturity_date] - df[date]).dt.days
     return df
 
+def add_market_rejection_column(df: pd.DataFrame, accepted_column: str = 'ACEITO/OFERTADO', threshold: float = 0.15) -> pd.DataFrame:
+    """
+    Adiciona uma nova coluna booleana (mas com tipo int, para ser usada em modelos de machine learning) 'REJEICAO_MERCADO' que indica se o leilão sofreu forte rejeição/frustração por parte dos dealers do mercado.
+    Argumentos: df (pd.DataFrame): DataFrame contendo a coluna de proporção aceito/ofertado.
+                accepted_column (str): Nome da coluna com a razão aceito/ofertado.
+                threshold (float): Limiar abaixo do qual o leilão é considerado rejeitado (padrão: 15%).
+    Retorna:    pd.DataFrame: DataFrame modificado com a nova coluna 'REJEICAO_MERCADO'.
+    """
+    df = df.copy()
+    df['REJEICAO_MERCADO'] = (df[accepted_column] < threshold).astype(int)
+    return df
