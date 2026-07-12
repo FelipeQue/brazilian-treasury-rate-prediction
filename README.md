@@ -7,7 +7,7 @@ Modelo preditivo para taxas de leilões do Tesouro Nacional utilizando regressã
 - Taxas de juros Selic. (API do Banco Central do Brasil)
 - Taxas de câmbio do dólar. (API do Banco Central do Brasil)
 
-## 🛠️ Tecnologias utilizadas
+## 🛠️ Tecnologias e bibliotecas utilizadas
 - Python 3.14.3
 - Jupyter Notebook 7.5.7
 - Pandas 3.0.3
@@ -15,7 +15,6 @@ Modelo preditivo para taxas de leilões do Tesouro Nacional utilizando regressã
 - Matplotlib 3.11.0
 - Seaborn 0.13.2
 - Scikit-Learn: 1.9.0
+- Statsmodels: 0.14.6
 
 - Durante o desenvolvimento deste projeto foi utilizado um ambiente virtual (venv) para gerenciar as dependências do projeto, garantindo que as bibliotecas necessárias estejam isoladas.
-
-- Utilizarei a biblioteca Logging.
