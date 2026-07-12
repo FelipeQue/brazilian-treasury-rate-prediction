@@ -64,3 +64,19 @@ def plot_scatter(df: pd.DataFrame, x: str, y: str, title: str, filename: str) ->
         edgecolor="white",
         linewidth=0.5)
     _style_axes(ax, title, x, y, filename)  
+
+def plot_correlation_heatmap(df: pd.DataFrame, title: str, filename: str) -> None:
+    """Mapa de calor da matriz de correlação entre variáveis numéricas."""
+    corr = df.select_dtypes(include=np.number).corr(method="pearson")
+    fig, ax = plt.subplots(figsize=(10, 8))
+    sns.heatmap(
+        corr,
+        fmt=".2f",
+        annot=False,
+        cmap=GRAPH_CONFIG["heatmap_cmap"],
+        cbar=True,
+        square=True,
+        linewidths=0.5,
+        linecolor="white",
+        ax=ax)
+    _style_axes(ax, title, "Variáveis", "Variáveis", filename)

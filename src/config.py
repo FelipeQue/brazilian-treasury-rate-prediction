@@ -26,5 +26,5 @@ GRAPH_CONFIG = {
     "text_color": "#333333",
     "primary_color": _palette[2],
     "dark_color": _palette[1],
-    "heatmap_cmap": "rocket"
+    "heatmap_cmap": "rocket_r"
 }
