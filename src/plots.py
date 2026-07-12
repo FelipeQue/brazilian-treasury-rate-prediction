@@ -80,3 +80,29 @@ def plot_correlation_heatmap(df: pd.DataFrame, title: str, filename: str) -> Non
         linecolor="white",
         ax=ax)
     _style_axes(ax, title, "Variáveis", "Variáveis", filename)
+
+def plot_boxplots(df: pd.DataFrame, cols: list[str], title: str, filename: str) -> None:
+    """Gera boxplots para múltiplas colunas lado a lado"""
+    fig, axes = plt.subplots(1, len(cols), figsize=(3.5 * len(cols), 5))
+    if len(cols) == 1:
+        axes = [axes]        
+    for ax, col in zip(axes, cols):
+        sns.boxplot(
+            data=df,
+            y=col,
+            ax=ax,
+            color=GRAPH_CONFIG["primary_color"],
+            linewidth=1.5,
+            fliersize=4,
+            flierprops={"markerfacecolor": GRAPH_CONFIG["dark_color"], "markeredgecolor": "white"}
+        )
+        
+        ax.set_title(col, fontsize=14, fontweight="bold", pad=10, color=GRAPH_CONFIG["title_color"])
+        ax.set_ylabel(col, fontsize=11, color=GRAPH_CONFIG["text_color"])
+        ax.set_xlabel("")
+        
+    fig.suptitle(title, fontsize=16, fontweight="bold", y=1.02, color=GRAPH_CONFIG["title_color"])
+    sns.despine(left=True, bottom=True)
+    plt.tight_layout()
+    _savefig(filename)
+    plt.show()
