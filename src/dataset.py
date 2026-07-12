@@ -2,6 +2,7 @@ import ssl
 from io import StringIO
 from urllib.error import URLError
 from urllib.request import urlopen
+from pathlib import Path
 
 import pandas as pd
 
@@ -53,3 +54,13 @@ def inspect_data(df):
     print (f"\nPrimeiros registros:\n{df.head()}")
     print (f"\nEstatísticas descritivas:\n{df.describe()}")
     return df.describe(include= "all" )
+
+def save_data_to_csv(df: pd.DataFrame, output_path: Path) -> None:
+    """
+    Garante a criação do diretório e salva o DataFrame em formato CSV.
+    Argumentos: df (pd.DataFrame): O DataFrame a ser salvo.
+                output_path (Path): O caminho completo do arquivo de destino (incluindo o nome do arquivo .csv).
+    """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_path, index=False)
+    print(f"Dataset salvo com sucesso em: {output_path}")
