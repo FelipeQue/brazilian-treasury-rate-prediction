@@ -50,3 +50,17 @@ def plot_histogram_by_category(df: pd.DataFrame, column: str, hue: str, title: s
         alpha=0.8,
         linewidth=0.5)
     _style_axes(ax, title, column, "Frequência", filename)
+
+def plot_scatter(df: pd.DataFrame, x: str, y: str, title: str, filename: str) -> None:
+    """Dispersão entre duas variáveis numéricas."""
+    fig, ax = plt.subplots(figsize=(10, 5))
+    sns.scatterplot(
+        data=df,
+        x=x,
+        y=y,
+        ax=ax,
+        color=GRAPH_CONFIG["primary_color"],
+        alpha=0.6,
+        edgecolor="white",
+        linewidth=0.5)
+    _style_axes(ax, title, x, y, filename)  
