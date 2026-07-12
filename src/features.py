@@ -1,3 +1,5 @@
+import pandas as pd
+
 """
 Limpeza, engenharia de atributos e preparação para modelagem (Fases 2, 3 e 4 do notebook).
 """
@@ -47,3 +49,16 @@ def treat_outliers_iqr(df, columns, factor=1.5, method="remove"):
             df.loc[df[column] > upper_bound, column] = upper_bound
             
     return df
+
+def add_duration_column(df, date='DATA', maturity_date='VENCIMENTO'):
+    """
+    Adiciona uma nova coluna 'DURACAO' que representa a duração em dias entre a data do leilão e a data de vencimento do título.
+    Argumentos: df (pd.DataFrame): DataFrame contendo as colunas de datas.
+                date (str): Nome da coluna com a data do leilão.
+                maturity_date (str): Nome da coluna com a data de vencimento.
+    Retorna:    pd.DataFrame: DataFrame com a nova coluna 'DURACAO'.
+    """
+    df = df.copy()
+    df['DURACAO'] = (df[maturity_date] - df[date]).dt.days
+    return df
+
