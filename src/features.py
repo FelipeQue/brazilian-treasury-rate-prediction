@@ -89,3 +89,13 @@ def add_lag_column(df: pd.DataFrame, date: str = 'DATA', target_column: str = 'T
     df['TAXA_ULTIMO_LEILAO'] = df.groupby('VENCIMENTO')[target_column].shift(1)
     df = df.dropna(subset=['TAXA_ULTIMO_LEILAO']).reset_index(drop=True)
     return df
+
+def select_final_columns(df: pd.DataFrame, feature_columns: list[str], target_column: str) -> pd.DataFrame:
+    """
+    Seleciona apenas as variáveis explicativas e o alvo: o recorte de colunas que efetivamente entra na modelagem.
+    Argumentos: df (pd.DataFrame): DataFrame processado.
+                feature_columns (list): Lista de nomes das colunas de variáveis explicativas.
+                target_column (str): Nome da coluna da variável alvo.
+    Retorna:    pd.DataFrame: DataFrame contendo apenas as colunas selecionadas.
+    """
+    return df[feature_columns + [target_column]].copy()
