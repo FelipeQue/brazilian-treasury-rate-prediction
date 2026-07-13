@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import sklearn
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.linear_model import LinearRegression
 from typing import Tuple
@@ -42,3 +45,26 @@ def calculate_vif(X: pd.DataFrame) -> pd.Series:
         else:
             vifs[column] = 1 / (1 - r2)      
     return pd.Series(vifs, name="VIF").sort_values(ascending=False)
+
+sklearn.set_config(transform_output="pandas")
+def scale_features(X_train, X_test, columns):
+    """
+    Padroniza colunas específicas de treino e teste usando StandardScaler,
+    mantendo as demais colunas intactas.
+    Argumentos: X_train: DataFrame de treino
+                X_test: DataFrame de teste
+                columns: Lista com os nomes das colunas a serem padronizadas
+    
+    Retorna:    X_train_scaled, X_test_scaled (ambos como DataFrames do Pandas)
+    """
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('num', StandardScaler(), columns)
+        ],
+        remainder='passthrough'
+    )
+    X_train_scaled = preprocessor.fit_transform(X_train)
+    X_test_scaled = preprocessor.transform(X_test)
+    X_train_scaled.columns = X_train_scaled.columns.str.replace(r'^(num__|remainder__)', '', regex=True)
+    X_test_scaled.columns = X_test_scaled.columns.str.replace(r'^(num__|remainder__)', '', regex=True)
+    return X_train_scaled, X_test_scaled
