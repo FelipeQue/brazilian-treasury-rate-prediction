@@ -95,6 +95,7 @@ def add_lag_column(df: pd.DataFrame, date: str = 'DATA', target_column: str = 'T
     df = df.sort_values(by=['VENCIMENTO', date]).reset_index(drop=True)
     df['TAXA_ULTIMO_LEILAO'] = df.groupby('VENCIMENTO')[target_column].shift(1)
     df = df.dropna(subset=['TAXA_ULTIMO_LEILAO']).reset_index(drop=True)
+    df = df.sort_values(by=date).reset_index(drop=True)
     return df
 
 def select_final_columns(df: pd.DataFrame, feature_columns: list[str], target_column: str) -> pd.DataFrame:
