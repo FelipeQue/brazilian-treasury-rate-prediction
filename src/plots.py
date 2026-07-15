@@ -106,3 +106,29 @@ def plot_boxplots(df: pd.DataFrame, cols: list[str], title: str, filename: str) 
     plt.tight_layout()
     _savefig(filename)
     plt.show()
+
+def plot_time_series(
+    df: pd.DataFrame,
+    date_column: str,
+    value_column: str,
+    title: str,
+    filename: str,
+    xlabel: str | None = None,
+    ylabel: str | None = None,
+) -> None:
+    """Gera um gráfico de série temporal de uma variável numérica ao longo do tempo."""
+    df_plot = df.copy()
+    df_plot[date_column] = pd.to_datetime(df_plot[date_column])
+    x_label = xlabel or date_column
+    y_label = ylabel or value_column
+    fig, ax = plt.subplots(figsize=(12, 5))
+    sns.lineplot(
+        data=df_plot,
+        x=date_column,
+        y=value_column,
+        ax=ax,
+        color=GRAPH_CONFIG["primary_color"],
+        linewidth=2.5
+    )
+    _style_axes(ax, title, x_label, y_label, filename)
+    plt.close(fig)
