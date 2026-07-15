@@ -2,19 +2,34 @@ import json
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.base import RegressorMixin
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # TODO Importar constantes de configuração
 
 """
-Treino, avaliação e persistência do modelo de regressão linear (Fases 5 e 6).
+Treino, avaliação e persistência do modelo de regressão linear, ridge e lasso (Fases 5 e 6).
 """
 
-def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> RegressorMixin:
+_MODEL_MAPPING = {
+    "linear": LinearRegression,
+    "ridge": Ridge,
+    "lasso": Lasso
+}
+
+def train_model(
+        X_train: pd.DataFrame,
+        y_train: pd.Series,
+        model_type: str = "linear",
+        **kwargs
+        ) -> RegressorMixin:
     """Treina um modelo de regressão nos dados de treino."""
-    model = LinearRegression()
+    model_type_lower = model_type.lower()
+    if model_type_lower not in _MODEL_MAPPING:
+        raise ValueError(f"Tipo de modelo inválido: {model_type}. Escolha entre 'linear', 'ridge' ou 'lasso'.")
+    model_class = _MODEL_MAPPING[model_type_lower]
+    model = model_class(**kwargs)
     model.fit(X_train, y_train)
     return model
 
