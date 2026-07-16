@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.base import RegressorMixin
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from xgboost import XGBRegressor
 
 # TODO Importar constantes de configuração
 
@@ -15,7 +16,8 @@ Treino, avaliação e persistência do modelo de regressão linear, ridge e lass
 _MODEL_MAPPING = {
     "linear": LinearRegression,
     "ridge": Ridge,
-    "lasso": Lasso
+    "lasso": Lasso,
+    "xgboost": XGBRegressor
 }
 
 def train_model(
