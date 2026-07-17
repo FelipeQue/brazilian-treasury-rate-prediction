@@ -14,7 +14,8 @@ Modelo preditivo para taxas de leilões do Tesouro Nacional utilizando regressã
 - Numpy 2.5.1
 - Matplotlib 3.11.0
 - Seaborn 0.13.2
-- Scikit-Learn: 1.9.0
-- Statsmodels: 0.14.6
+- Scikit-Learn 1.9.0
+- Statsmodels 0.14.6
+- XGBoost 3.3.0
 
 - Durante o desenvolvimento deste projeto foi utilizado um ambiente virtual (venv) para gerenciar as dependências do projeto, garantindo que as bibliotecas necessárias estejam isoladas.

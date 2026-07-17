@@ -1,70 +1,49 @@
-import pandas as pd
+import json
+import joblib
 import numpy as np
-import sklearn
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import TimeSeriesSplit
-from sklearn.linear_model import LinearRegression
-from typing import Tuple
+import pandas as pd
+from sklearn.base import RegressorMixin
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from xgboost import XGBRegressor
 
-def split_time_series(X: pd.DataFrame, y: pd.Series) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
-    """
-    Realiza a divisão entre treino e teste de forma cronológica (80/20)
-    utilizando a classe nativa TimeSeriesSplit do scikit-learn.
-    Argumentos: X (pd.DataFrame): DataFrame com as variáveis explicativas.
-                y (pd.Series): Série com a variável alvo.
-    Retorna:    Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]: DataFrames de treino e teste para X e y.
-    """
-    time_series_splitter = TimeSeriesSplit(n_splits=4)
+# TODO Importar constantes de configuração
 
-    train_indices, test_indices = None, None
-    for current_train_index, current_test_index in time_series_splitter.split(X):
-        train_indices = current_train_index
-        test_indices = current_test_index
+"""
+Treino, avaliação e persistência do modelo de regressão linear, ridge e lasso (Fases 5 e 6).
+"""
 
-    X_train, X_test = X.iloc[train_indices].copy(), X.iloc[test_indices].copy()
-    y_train, y_test = y.iloc[train_indices].copy(), y.iloc[test_indices].copy()
-    
-    return X_train, X_test, y_train, y_test
+_MODEL_MAPPING = {
+    "linear": LinearRegression,
+    "ridge": Ridge,
+    "lasso": Lasso,
+    "xgboost": XGBRegressor
+}
 
-def calculate_vif(X: pd.DataFrame) -> pd.Series:
-    """
-    Calcula o VIF de cada coluna de X (DataFrame com as variáveis explicativas de treino).
-    Para cada variável, realiza uma regressão linear contra todas as outras,
-    captura o R² e aplica a fórmula VIF = 1 / (1 - R²).
-    Argumentos: X (pd.DataFrame): DataFrame com as variáveis explicativas.
-    Retorna:    pd.Series: Série com os valores de VIF para cada variável, ordenada de forma decrescente.
-    """
-    vifs = {}
-    for column in X.columns:
-        y_alvo = X[column]
-        X_rest = X.drop(columns=column)
-        r2 = LinearRegression().fit(X_rest, y_alvo).score(X_rest, y_alvo)
-        if r2 >= 1.0:
-            vifs[column] = np.inf
-        else:
-            vifs[column] = 1 / (1 - r2)      
-    return pd.Series(vifs, name="VIF").sort_values(ascending=False)
+def train_model(
+        X_train: pd.DataFrame,
+        y_train: pd.Series,
+        model_type: str = "linear",
+        **kwargs
+        ) -> RegressorMixin:
+    """Treina um modelo de regressão nos dados de treino."""
+    model_type_lower = model_type.lower()
+    if model_type_lower not in _MODEL_MAPPING:
+        raise ValueError(f"Tipo de modelo inválido: {model_type}. Escolha entre 'linear', 'ridge' ou 'lasso'.")
+    model_class = _MODEL_MAPPING[model_type_lower]
+    model = model_class(**kwargs)
+    model.fit(X_train, y_train)
+    return model
 
-sklearn.set_config(transform_output="pandas")
-def scale_features(X_train, X_test, columns):
-    """
-    Padroniza colunas específicas de treino e teste usando StandardScaler,
-    mantendo as demais colunas intactas.
-    Argumentos: X_train: DataFrame de treino
-                X_test: DataFrame de teste
-                columns: Lista com os nomes das colunas a serem padronizadas
-    
-    Retorna:    X_train_scaled, X_test_scaled (ambos como DataFrames do Pandas)
-    """
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ('num', StandardScaler(), columns)
-        ],
-        remainder='passthrough'
-    )
-    X_train_scaled = preprocessor.fit_transform(X_train)
-    X_test_scaled = preprocessor.transform(X_test)
-    X_train_scaled.columns = X_train_scaled.columns.str.replace(r'^(num__|remainder__)', '', regex=True)
-    X_test_scaled.columns = X_test_scaled.columns.str.replace(r'^(num__|remainder__)', '', regex=True)
-    return X_train_scaled, X_test_scaled
+
+def evaluate_model(model: RegressorMixin, X: pd.DataFrame, y_true: pd.Series) -> dict:
+    """Calcula MAE, MSE, RMSE e R2 das previsões do modelo."""
+    y_pred = model.predict(X)
+    mse = mean_squared_error(y_true, y_pred)
+    return {
+        "MAE": mean_absolute_error(y_true, y_pred),
+        "MSE": mse,
+        "RMSE": np.sqrt(mse),
+        "R2": r2_score(y_true, y_pred),
+    }
+
