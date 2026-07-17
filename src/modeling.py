@@ -47,3 +47,8 @@ def evaluate_model(model: RegressorMixin, X: pd.DataFrame, y_true: pd.Series) ->
         "R2": r2_score(y_true, y_pred),
     }
 
+def print_metrics(metrics: dict, title: str) -> None:
+    """Imprime no notebook as métricas de avaliação do modelo."""
+    print(title)
+    for metric_name, metric_value in metrics.items():
+        print(f"  {metric_name}: {metric_value:,.4f}")
