@@ -41,6 +41,7 @@ Modelo preditivo para taxas de leilões das NTN-Bs do Tesouro Nacional, utilizan
 - XGBoost (um modelo de árvore de decisão sequencial)
 
 Cada modelo é avaliado com base nas métricas R2, MAE, MSE e RMSE. Foram treinados e testados modelos com o conjunto completo de variáveis explicativas e também com o conjunto sem a variável de lag TAXA_ULTIMO_LEILAO, para avaliar o impacto desta variável no desempenho do modelo. Também foi feita uma breve discussão sobre o comportamento dos dados levando em conta o período histórico.
+
 6. 💾 **Fase 6: Seleção e versionamento** - Nesta fase, o modelo de melhor desempenho (XGBoost) é versionado e salvo, assim como suas métricas obtidas na fase de treino/teste.
 
 ## 📦 Modelo entregue: v1.0
