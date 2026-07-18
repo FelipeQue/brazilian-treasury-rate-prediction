@@ -1,0 +1,39 @@
+{
+  "version": "v1.0",
+  "date": "2026-07-17",
+  "trained_with": "100% of the data",
+  "features": [
+    "SELIC",
+    "USD_VALOR",
+    "ACEITO/OFERTADO",
+    "DURACAO",
+    "TAXA_ULTIMO_LEILAO",
+    "REJEICAO_MERCADO"
+  ],
+  "columns_to_scale": [
+    "TAXA_ULTIMO_LEILAO",
+    "USD_VALOR",
+    "SELIC",
+    "DURACAO"
+  ],
+  "model_type": "XGBoost",
+  "model_params": {
+    "n_estimators": 50,
+    "max_depth": 3,
+    "learning_rate": 0.05,
+    "subsample": 0.85,
+    "random_state": 42
+  },
+  "train_metrics": {
+    "MAE": 0.19273825280442392,
+    "MSE": 0.07245540690280126,
+    "RMSE": 0.2691754203169399,
+    "R2": 0.9544611880828942
+  },
+  "test_metrics": {
+    "MAE": 0.15475659352983748,
+    "MSE": 0.05655033548108961,
+    "RMSE": 0.23780314438856692,
+    "R2": 0.5358830630975558
+  }
+}
