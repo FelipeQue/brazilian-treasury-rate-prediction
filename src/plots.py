@@ -132,3 +132,58 @@ def plot_time_series(
     )
     _style_axes(ax, title, x_label, y_label, filename)
     plt.close(fig)
+
+def plot_observed_vs_predicted(
+    y_true: np.ndarray | pd.Series, 
+    y_pred: np.ndarray | pd.Series, 
+    title: str, 
+    filename: str,
+    xlabel: str = "Valor Real",
+    ylabel: str = "Valor Previsto"
+) -> None:
+    """Plota gráfico dos valores reais x valores previstos."""
+    y_true = np.asarray(y_true)
+    y_pred = np.asarray(y_pred)
+    
+    fig, ax = plt.subplots(figsize=(7, 6))
+    
+    ax.scatter(
+        y_true, 
+        y_pred, 
+        alpha=0.4, 
+        s=20, 
+        color=GRAPH_CONFIG["primary_color"], 
+        edgecolor="white", 
+        linewidth=0.3
+    )
+    lims = [min(y_true.min(), y_pred.min()), max(y_true.max(), y_pred.max())]
+    ax.plot(lims, lims, "--", color=GRAPH_CONFIG["dark_color"], linewidth=2.0, label="Ajuste perfeito")
+    ax.legend(frameon=True, facecolor="white", edgecolor="none")
+    _style_axes(ax, title, xlabel, ylabel, filename)
+
+
+def plot_residuals(
+    y_true: np.ndarray | pd.Series, 
+    y_pred: np.ndarray | pd.Series, 
+    title: str, 
+    filename: str,
+    xlabel: str = "Valor Previsto",
+    ylabel: str = "Resíduo (Real - Previsto)"
+) -> pd.Series:
+    """Resíduos (real - previsto) versus valores previstos. Devolve os resíduos calculados."""
+    residuals = pd.Series(np.asarray(y_true) - np.asarray(y_pred))
+    
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    ax.scatter(
+        y_pred, 
+        residuals, 
+        alpha=0.5, 
+        color=GRAPH_CONFIG["primary_color"], 
+        edgecolor="white", 
+        linewidth=0.3
+    )
+    
+    ax.axhline(0, color=GRAPH_CONFIG["dark_color"], linestyle="--", linewidth=1.8)
+    _style_axes(ax, title, xlabel, ylabel, filename)
+    return residuals

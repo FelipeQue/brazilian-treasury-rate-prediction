@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from xgboost import XGBRegressor
 
-# TODO Importar constantes de configuração
+from src.config import MODEL_DIR
 
 """
 Treino, avaliação e persistência do modelo de regressão linear, ridge e lasso (Fases 5 e 6).
@@ -47,3 +47,21 @@ def evaluate_model(model: RegressorMixin, X: pd.DataFrame, y_true: pd.Series) ->
         "R2": r2_score(y_true, y_pred),
     }
 
+def print_metrics(metrics: dict, title: str) -> None:
+    """Imprime no notebook as métricas de avaliação do modelo."""
+    print(title)
+    for metric_name, metric_value in metrics.items():
+        print(f"  {metric_name}: {metric_value:,.4f}")
+
+def save_model(model: RegressorMixin | dict, version_folder: str, filename: str) -> None:
+    """Salva o modelo treinado em um arquivo joblib dentro da pasta MODEL_DIR."""
+    (MODEL_DIR / version_folder).mkdir(parents=True, exist_ok=True)
+    joblib.dump(model, MODEL_DIR / version_folder / filename)
+    print(f"Modelo salvo em: {MODEL_DIR / version_folder / filename}")
+
+def save_metrics(metrics: dict, version_folder: str, filename: str) -> None:
+    """Salva o dicionário de metadados/métricas dentro da pasta MODEL_DIR."""
+    (MODEL_DIR / version_folder).mkdir(parents=True, exist_ok=True)
+    with open(MODEL_DIR / version_folder / filename, "w", encoding="utf-8") as f:
+        json.dump(metrics, f, indent=2, ensure_ascii=False)
+    print(f"Métricas salvas em: {MODEL_DIR / version_folder / filename}")

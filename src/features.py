@@ -171,3 +171,15 @@ def scale_features(X_train, X_test, columns):
     X_train_scaled.columns = X_train_scaled.columns.str.replace(r'^(num__|remainder__)', '', regex=True)
     X_test_scaled.columns = X_test_scaled.columns.str.replace(r'^(num__|remainder__)', '', regex=True)
     return X_train_scaled, X_test_scaled
+
+def scale_full_features(X_full, columns):
+    """Padroniza colunas do conjunto completo para treino e retorna os dados e o preprocessor ajustado."""
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('num', StandardScaler(), columns)
+        ],
+        remainder='passthrough'
+    )
+    X_full_scaled = preprocessor.fit_transform(X_full)
+    X_full_scaled.columns = X_full_scaled.columns.str.replace(r'^(num__|remainder__)', '', regex=True)
+    return X_full_scaled, preprocessor

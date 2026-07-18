@@ -20,6 +20,8 @@ PROCESSED_FILE = PROCESSED_DIR / "leiloes_tesouro_nacional_processed.csv"
 FINAL_DIR = ROOT_DIR / "data" / "final"
 FINAL_FILE = FINAL_DIR / "leiloes_tesouro_nacional_final.csv"
 
+MODEL_DIR = ROOT_DIR / "models"
+
 # Configurações de estilo do Seaborn e cores para os gráficos
 sns.set_theme(style="whitegrid", rc={"grid.linestyle": "--", "grid.alpha": 0.5})
 _palette = sns.color_palette("rocket", as_cmap=False)
