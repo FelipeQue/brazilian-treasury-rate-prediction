@@ -3,7 +3,7 @@ Modelo preditivo para taxas de leilões das NTN-Bs do Tesouro Nacional, utilizan
 
 ## 📊 Os Dados
 
-* **📈 Taxas de leilões do Tesouro Nacional:** [Dataset disponível no Kaggle](https://www.kaggle.com/datasets/kayoricardo/leiles-da-dvida-pblica-federal-brasil/data)
+* **📈 Taxas de leilões do Tesouro Nacional:** [Dataset disponível no Kaggle](https://www.kaggle.com/datasets/kayoricardo/leiles-da-dvida-pblica-federal-brasil/data).
 * **🏦 Taxas de juros Selic:** Obtidas via API do Banco Central do Brasil.
 * **💵 Taxas de câmbio do dólar:** Obtidas via API do Banco Central do Brasil.
 
@@ -39,14 +39,15 @@ Modelo preditivo para taxas de leilões das NTN-Bs do Tesouro Nacional, utilizan
 - Ridge (modelo de regressão linear com regularização)
 - Lasso (modelo de regressão linear com regularização)
 - XGBoost (um modelo de árvore de decisão sequencial)
+
 Cada modelo é avaliado com base nas métricas R2, MAE, MSE e RMSE. Foram treinados e testados modelos com o conjunto completo de variáveis explicativas e também com o conjunto sem a variável de lag TAXA_ULTIMO_LEILAO, para avaliar o impacto desta variável no desempenho do modelo. Também foi feita uma breve discussão sobre o comportamento dos dados levando em conta o período histórico.
 6. 💾 **Fase 6: Seleção e versionamento** - Nesta fase, o modelo de melhor desempenho (XGBoost) é versionado e salvo, assim como suas métricas obtidas na fase de treino/teste.
 
 ## 📦 Modelo entregue: v1.0
 
-Versão: v1.0
-Tipo: XGBoost
-Modelo e métricas disponíveis no diretório: models/v1
+- Versão: v1.0
+- Tipo: XGBoost
+- Modelo e métricas disponíveis no diretório: models/v1
 
 ## 🔮 Possíveis melhorias futuras
 - Incluir outras variáveis macroeconômicas, como a direção de tendência da Selic conforme as últimas reuniões do Copom (aumento, diminuição ou manutenção), ou o DI futuro, para tentar ajudar o modelo a antecipar mudanças de regime e reduzir mais o erro.
