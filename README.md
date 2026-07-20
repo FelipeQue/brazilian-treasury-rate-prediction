@@ -54,7 +54,7 @@ Cada modelo é avaliado com base nas métricas R2, MAE, MSE e RMSE. Foram treina
 - Incluir outras variáveis macroeconômicas, como a direção de tendência da Selic conforme as últimas reuniões do Copom (aumento, diminuição ou manutenção), ou o DI futuro, para tentar ajudar o modelo a antecipar mudanças de regime e reduzir mais o erro.
 - Treinar o modelo em outras janelas temporais e regimes econômicos.
 
-## Vídeo sobre o projeto
+## 🎬 Vídeo sobre o projeto
 
 [Vídeo](https://drive.google.com/file/d/1r5fcceUosVjjBrI0UN8h_exdajqna-ny/view?usp=sharing)
 <sub>*Dica: Segure Ctrl / Cmd ao clicar para abrir o vídeo em uma nova aba.*</sub>
